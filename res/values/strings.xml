@@ -4,11 +4,12 @@
     <string name="hello_world">Hello world!</string>
     <string name="menu_settings">Settings</string>
     <string name="title_activity_welcome">WelcomeActivity</string>
-    <string name="Username">usernameEnterHint</string>
-    <string name="enterPasswordHint">Enter Password</string>
-    <string name="usernameEnterHit">Enter Username</string>
-    <string name="loginButton">login</string>
-    <string name="seeMyMosaiscs">See My Mosaics</string>
+    <string name="enter_password_hint">Enter Password</string>
+    <string name="username_enter_hint">Enter Username</string>
+    <string name="login_button">login</string>
+    <string name="see_my_mosaics">See My Mosaics</string>
     <string name="makeAMosaic">Make A Mosaic</string>
+    <string name="app_title">Yo Dawg Mosaic Me</string>
+    <string name="title_activity_main_menu">MainMenuActivity</string>
 
 </resources>
