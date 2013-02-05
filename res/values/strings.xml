@@ -8,5 +8,7 @@
     <string name="enterPasswordHint">Enter Password</string>
     <string name="usernameEnterHit">Enter Username</string>
     <string name="loginButton">login</string>
+    <string name="seeMyMosaiscs">See My Mosaics</string>
+    <string name="makeAMosaic">Make A Mosaic</string>
 
 </resources>
