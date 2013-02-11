@@ -5,11 +5,21 @@ import java.util.Set;
 import android.graphics.Bitmap;
 
 public class GeneratorSimpleImpl implements Generator {
-	protected GeneratorSimpleImpl(Bitmap target, Set<Bitmap> imagePool, GeneratorConfiguration config){
+	protected GeneratorSimpleImpl(Bitmap target, Set<AnalyzedImage> imagePool, GeneratorConfiguration config){
+		//setup work
+		//precompute stuff, image pool value averages should not be made by Generator
+		//This class should not take Bitmaps, should take an object that is created by a Preprocessor class 
+	}
+	
+	private void mutate() {
+		
+	}
+	
+	private void evaluateFitness() {
 		
 	}
 
-	public void start() {
+ 	public void start() {
 		// TODO Auto-generated method stub
 		
 	}
