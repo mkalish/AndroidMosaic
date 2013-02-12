@@ -1,4 +1,4 @@
-package com.webb.androidmosaic.generator;
+package com.webb.androidmosaic.generation;
 
 public class ColorSpaceUtils {
 	

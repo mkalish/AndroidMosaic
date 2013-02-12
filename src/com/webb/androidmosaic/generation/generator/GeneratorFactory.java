@@ -1,6 +1,8 @@
-package com.webb.androidmosaic.generator;
+package com.webb.androidmosaic.generation.generator;
 
 import java.util.Set;
+
+import com.webb.androidmosaic.generation.AnalyzedImage;
 
 import android.graphics.Bitmap;
 
@@ -9,7 +11,7 @@ import android.graphics.Bitmap;
  * and then translate it to the simple inputs that the generator implementations expect.
  */
 public class GeneratorFactory {
-	static Generator getGenerator(GeneratorConfiguration cfg){ //These arguments will expand
+	public static Generator getGenerator(GeneratorConfiguration cfg){ //These arguments will expand
 		Bitmap targetImage = null;
 		Set<AnalyzedImage> imagePool = null;
 		return new GeneratorSimpleImpl(targetImage, imagePool, cfg); //TODO: Handle config, use caching

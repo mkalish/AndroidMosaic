@@ -1,4 +1,6 @@
-package com.webb.androidmosaic.generator;
+package com.webb.androidmosaic.generation.generator;
+
+import com.webb.androidmosaic.generation.NewStateListener;
 
 public interface Generator {
 	//Method to Start the generator

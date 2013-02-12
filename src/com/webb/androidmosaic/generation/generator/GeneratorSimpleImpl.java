@@ -1,6 +1,9 @@
-package com.webb.androidmosaic.generator;
+package com.webb.androidmosaic.generation.generator;
 
 import java.util.Set;
+
+import com.webb.androidmosaic.generation.AnalyzedImage;
+import com.webb.androidmosaic.generation.NewStateListener;
 
 import android.graphics.Bitmap;
 
