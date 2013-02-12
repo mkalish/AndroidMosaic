@@ -1,5 +1,9 @@
 package com.webb.androidmosaic.test;
 
+import com.webb.androidmosaic.generation.ColorSpaceUtils;
+import com.webb.androidmosaic.generation.LABValue;
+
+import junit.framework.Assert;
 import junit.framework.TestCase;
 
 public class ColorSpaceUtilsTest extends TestCase {
@@ -17,7 +21,11 @@ public class ColorSpaceUtilsTest extends TestCase {
 	}
 
 	public void testRGBToLAB() {
-		fail("Not yet implemented");
+		LABValue lab = ColorSpaceUtils.RGBToLAB(150, 50, 50); //CURRENTLY TO XYZ
+		Assert.assertEquals(0,lab.getL());
+		Assert.assertEquals(0,lab.getA());
+		Assert.assertEquals(0,lab.getB());
+
 	}
 
 	public void testLABColorDistance() {
