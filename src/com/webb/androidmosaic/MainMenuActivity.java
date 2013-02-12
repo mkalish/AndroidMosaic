@@ -1,15 +1,41 @@
 package com.webb.androidmosaic;
 
-import android.os.Bundle;
 import android.app.Activity;
+import android.content.Intent;
+import android.os.Bundle;
 import android.view.Menu;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
 
 public class MainMenuActivity extends Activity {
+	
+	Button viewMosaics;	
+	Button makeAMosaic;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_menu);
+        
+        viewMosaics = (Button) this.findViewById(R.id.viewMosaics);
+        makeAMosaic = (Button) this.findViewById(R.id.makeMosaic);
+        
+        viewMosaics.setOnClickListener(new OnClickListener() {
+			
+			public void onClick(View v) {
+				// TODO Start he view mosaics activity
+				
+			}
+		});
+        
+        makeAMosaic.setOnClickListener(new OnClickListener() {
+			
+			public void onClick(View v) {
+				Intent cameraPreview = new Intent(getBaseContext(), CameraPreviewActivity.class);
+				startActivityForResult(cameraPreview, 1234);
+			}
+		});
     }
 
     @Override

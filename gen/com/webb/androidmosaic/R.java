@@ -15,21 +15,25 @@ public final class R {
         public static final int ic_launcher=0x7f020001;
     }
     public static final class id {
-        public static final int button1=0x7f070003;
-        public static final int button3=0x7f070004;
+        public static final int button1=0x7f070006;
         public static final int login_button=0x7f070000;
-        public static final int menu_settings=0x7f070005;
+        public static final int makeMosaic=0x7f070005;
+        public static final int menu_settings=0x7f070007;
         public static final int password=0x7f070002;
+        public static final int surface_view=0x7f070003;
         public static final int username=0x7f070001;
+        public static final int viewMosaics=0x7f070004;
     }
     public static final class layout {
         public static final int activity_welcome=0x7f030000;
-        public static final int main_menu=0x7f030001;
-        public static final int takeaphotolayout=0x7f030002;
+        public static final int camera_preview=0x7f030001;
+        public static final int main_menu=0x7f030002;
+        public static final int takeaphotolayout=0x7f030003;
     }
     public static final class menu {
         public static final int activity_welcome=0x7f060000;
-        public static final int main_menu=0x7f060001;
+        public static final int camera_preview=0x7f060001;
+        public static final int main_menu=0x7f060002;
     }
     public static final class string {
         public static final int app_name=0x7f040000;
@@ -40,6 +44,7 @@ public final class R {
         public static final int makeAMosaic=0x7f040008;
         public static final int menu_settings=0x7f040002;
         public static final int see_my_mosaics=0x7f040007;
+        public static final int title_activity_camera_preview=0x7f04000b;
         public static final int title_activity_main_menu=0x7f04000a;
         public static final int title_activity_welcome=0x7f040003;
         public static final int username_enter_hint=0x7f040005;

@@ -11,5 +11,6 @@
     <string name="makeAMosaic">Make A Mosaic</string>
     <string name="app_title">Yo Dawg Mosaic Me</string>
     <string name="title_activity_main_menu">MainMenuActivity</string>
+    <string name="title_activity_camera_preview">MainActivity</string>
 
 </resources>
