@@ -29,32 +29,34 @@ public class PreprocessorImpl implements Preprocessor {
 	private AnalyzedImage analyze (Bitmap bitmap){
 		int divisions = pc.getDivisions();
 		
-		//crop to square
+		//crop to square, TODO: should probably crop from center
 		int shortSideLen = Math.min(bitmap.getHeight(),bitmap.getWidth());
 		bitmap = cropToSquare(bitmap, shortSideLen);
 		
-		bitmap = getResizedBitmap(bitmap, divisions, divisions);
+		//There might be a better way to resize
+		bitmap = Bitmap.createScaledBitmap(bitmap, divisions, divisions, false);
 		
 		//Retrieve data from formatted bitmap
-		int[] pixels = new int[divisions^2];
+		int[] pixels = new int[divisions*divisions];
 		bitmap.getPixels(pixels, 0, divisions, 0, 0, divisions, divisions);
 		
 		//Initialize labValues "array"
 		List<List<LABValue>> labValues = new ArrayList<List<LABValue>>(divisions);
-		for (List<LABValue> list : labValues){
-			list = new ArrayList<LABValue>(divisions);
+		
+		for (int i = 0; i <divisions;i++){
+			List<LABValue> l = new ArrayList<LABValue>(divisions);
+			labValues.add(l);
 		}
 		
+		//(row,column)
 		for(int i = 0;i<divisions;i++){
 			for(int j = 0;j<divisions;j++){
-				int pixel = pixels[i+j];
-				//strip alpha
-				pixel = pixel << 8;
-				int r = pixel >> 24;
-				int g = (pixel << 8) >> 24;
-				int b = (pixel << 16) >> 24;
+				int pixel = pixels[i*divisions+j];
+				int r = (pixel >> 16) & 0xff;     //bitwise shifting
+				int g = (pixel >> 8) & 0xff;
+				int b = pixel & 0xff;
 				LABValue labValue = ColorSpaceUtils.RGBToLAB(r, g, b);
-				labValues.get(i).set(j, labValue);
+				labValues.get(i).add(labValue);
 			}
 		}
 		AnalyzedImage ai = new AnalyzedImage(labValues);
@@ -64,20 +66,4 @@ public class PreprocessorImpl implements Preprocessor {
 	private Bitmap cropToSquare(Bitmap bm, int dimension){
 		return Bitmap.createBitmap(bm, 0, 0, dimension, dimension);
 	}
-	//Taken from the interbutt
-	private Bitmap getResizedBitmap(Bitmap bm, int newHeight, int newWidth) {
-	    int width = bm.getWidth();
-	    int height = bm.getHeight();
-	    float scaleWidth = ((float) newWidth) / width;
-	    float scaleHeight = ((float) newHeight) / height;
-	    // CREATE A MATRIX FOR THE MANIPULATION
-	    Matrix matrix = new Matrix();
-	    // RESIZE THE BIT MAP
-	    matrix.postScale(scaleWidth, scaleHeight);
-
-	    // "RECREATE" THE NEW BITMAP
-	    Bitmap resizedBitmap = Bitmap.createBitmap(bm, 0, 0, width, height, matrix, false);
-	    return resizedBitmap;
-	}
-
 }
