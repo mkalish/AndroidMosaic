@@ -9,4 +9,8 @@ public class AnalyzedImage {
 	public AnalyzedImage(LABValue[][] labValues){
 		this.labValues = labValues;
 	}
+	
+	public LABValue[][] getLabValues(){
+		return labValues;
+	}
 }

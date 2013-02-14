@@ -3,18 +3,18 @@ package com.webb.androidmosaic.generation.preprocessor;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.graphics.Bitmap;
+
 import com.webb.androidmosaic.generation.AnalyzedImage;
 import com.webb.androidmosaic.generation.ColorSpaceUtils;
+import com.webb.androidmosaic.generation.Configuration;
 import com.webb.androidmosaic.generation.LABValue;
 
-import android.graphics.Bitmap;
-import android.graphics.Matrix;
-
 public class PreprocessorImpl implements Preprocessor {
-	PreprocessorConfiguration pc;
+	Configuration gc;
 	
-	public PreprocessorImpl(PreprocessorConfiguration pc){
-		this.pc = pc;
+	public PreprocessorImpl(Configuration gc){
+		this.gc = gc;
 	}
 
 	public List<AnalyzedImage> analyze(List<Bitmap> bitmaps) {
@@ -27,7 +27,7 @@ public class PreprocessorImpl implements Preprocessor {
 	}
 	
 	private AnalyzedImage analyze (Bitmap bitmap){
-		int divisions = pc.getDivisions();
+		int divisions = gc.getTileDivisions();
 		
 		//crop to square, TODO: should probably crop from center
 		int shortSideLen = Math.min(bitmap.getHeight(),bitmap.getWidth());

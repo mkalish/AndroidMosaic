@@ -11,8 +11,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.test.ActivityTestCase;
 
+import com.webb.androidmosaic.generation.Configuration;
 import com.webb.androidmosaic.generation.preprocessor.Preprocessor;
-import com.webb.androidmosaic.generation.preprocessor.PreprocessorConfiguration;
 import com.webb.androidmosaic.generation.preprocessor.PreprocessorImpl;
 
 public class PreprocessorImplTest extends ActivityTestCase{
@@ -27,10 +27,10 @@ public class PreprocessorImplTest extends ActivityTestCase{
         InputStream ts = testRes.openRawResource(R.drawable.red_rectangle);
 		
 		Bitmap bitmap = BitmapFactory.decodeStream(ts);
-		PreprocessorConfiguration pc = new PreprocessorConfiguration(5);
-		Preprocessor p = new PreprocessorImpl(pc);
 		List<Bitmap> listOfBitmaps = new ArrayList<Bitmap>();
 		listOfBitmaps.add(bitmap);
+		Configuration gc = new Configuration(listOfBitmaps, 5);
+		Preprocessor p = new PreprocessorImpl(gc);
 		p.analyze(listOfBitmaps);
 	}
 
