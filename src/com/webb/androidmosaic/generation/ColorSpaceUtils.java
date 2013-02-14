@@ -40,7 +40,6 @@ public class ColorSpaceUtils {
 	
 	//CIE94 color difference
 	public static float LABColorDistance(LABValue lab1, LABValue lab2){
-		float result;
 		float l1 = lab1.getL(), a1 = lab1.getA(), b1 = lab1.getB();
 		float l2 = lab2.getL(), a2 = lab2.getA(), b2 = lab2.getB();
 		float deltaL = l1-l2;
