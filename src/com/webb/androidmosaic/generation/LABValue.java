@@ -2,9 +2,9 @@ package com.webb.androidmosaic.generation;
 
 //Consider replacing with an array for performance.
 public class LABValue {
-	float l;
-	float a;
-	float b;
+	private final float l;
+	private final float a;
+	private final float b;
 	
 	public LABValue(float l, float a, float b){
 		this.l=l;
