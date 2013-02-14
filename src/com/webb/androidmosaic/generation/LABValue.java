@@ -1,22 +1,22 @@
 package com.webb.androidmosaic.generation;
 
 public class LABValue {
-	int l;
-	int a;
-	int b;
+	float l;
+	float a;
+	float b;
 	
-	public LABValue(int l, int a, int b){
+	public LABValue(float l, float a, float b){
 		this.l=l;
 		this.a=a;
 		this.b=b;
 	}
-	public int getL() {
+	public float getL() {
 		return l;
 	}
-	public int getA() {
+	public float getA() {
 		return a;
 	}
-	public int getB() {
+	public float getB() {
 		return b;
 	}
 	@Override
