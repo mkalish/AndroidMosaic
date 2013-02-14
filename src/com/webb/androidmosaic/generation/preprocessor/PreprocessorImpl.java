@@ -41,11 +41,10 @@ public class PreprocessorImpl implements Preprocessor {
 		bitmap.getPixels(pixels, 0, divisions, 0, 0, divisions, divisions);
 		
 		//Initialize labValues "array"
-		List<List<LABValue>> labValues = new ArrayList<List<LABValue>>(divisions);
+		LABValue[][] labValues = new LABValue[divisions][];
 		
 		for (int i = 0; i <divisions;i++){
-			List<LABValue> l = new ArrayList<LABValue>(divisions);
-			labValues.add(l);
+			labValues[i] = new LABValue[divisions];
 		}
 		
 		//(row,column)
@@ -56,7 +55,7 @@ public class PreprocessorImpl implements Preprocessor {
 				int g = (pixel >> 8) & 0xff;
 				int b = pixel & 0xff;
 				LABValue labValue = ColorSpaceUtils.RGBToLAB(r, g, b);
-				labValues.get(i).add(labValue);
+				labValues[i][j]=labValue;
 			}
 		}
 		AnalyzedImage ai = new AnalyzedImage(labValues);

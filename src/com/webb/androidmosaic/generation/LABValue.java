@@ -1,5 +1,6 @@
 package com.webb.androidmosaic.generation;
 
+//Consider replacing with an array for performance.
 public class LABValue {
 	float l;
 	float a;
