@@ -9,12 +9,13 @@ public class Configuration {
 	private final List<Bitmap> imagePool;
 	private final int tileDivisions;
 	private final int targetWidthDivisions;
-
+	private int maxDuplicates;
 	
-	public Configuration(List<Bitmap> imagePool, int tileDivisions, int targetWidthDivisions) {
+	public Configuration(List<Bitmap> imagePool, int tileDivisions, int targetWidthDivisions, int maxDuplicates) {
 		this.imagePool = imagePool;
 		this.tileDivisions = tileDivisions;
 		this.targetWidthDivisions = targetWidthDivisions;
+		this.maxDuplicates = maxDuplicates;
 	}
 	
 	public List<Bitmap> getImagePool() {
@@ -27,5 +28,9 @@ public class Configuration {
 
 	public int getTargetWidthDivisions() {
 		return targetWidthDivisions;
+	}
+
+	public int getMaxDuplicates() {
+		return maxDuplicates;
 	}
 }
