@@ -21,6 +21,7 @@ import com.webb.androidmosaic.generation.preprocessor.PreprocessorFactory;
 public class GeneratorSimpleImpl implements Generator {
 	private List<AnalyzedImage> targetImageTiles = new ArrayList<AnalyzedImage>();
 	private List<AnalyzedImage> solutionImageTiles = new ArrayList<AnalyzedImage>();
+	private int targetImageLen;
 	private List<AnalyzedImage> poolImageTiles = new ArrayList<AnalyzedImage>();
 	private volatile ConcurrentLinkedQueue<NewStateListener> listeners;
 	private MaxDuplicatesList<AnalyzedImage> maxDupList;
@@ -44,6 +45,7 @@ public class GeneratorSimpleImpl implements Generator {
 	
 	public void setTargetImage(Bitmap target){
 		this.targetImageTiles = analyzeTargetImage(target);
+		this.targetImageLen = targetImageTiles.size();
 	}
 
  	public void start() {
@@ -56,11 +58,11 @@ public class GeneratorSimpleImpl implements Generator {
  	
  	private class GeneratorLoop extends Thread {
 		int iterationsElapsed = 0;
-		float currentFitness = Float.MAX_VALUE;
+		float[] currentFitness;
 		
 		GeneratorLoop(){
 			//Initialize solution randomly
-			for(int i = 0;i<poolImageTiles.size();i++){
+			for(int i = 0;i<targetImageTiles.size();i++){
 				solutionImageTiles.add(maxDupList.getItem());
 			}
 			//Initialize fitness
@@ -72,16 +74,48 @@ public class GeneratorSimpleImpl implements Generator {
 		public void run() {
 			while(iterationsElapsed<10000){//TODO:change to reasonable stopping point
 				iterationsElapsed++;
-				
 				checkPaused();
 				
 				//mutate
-					//Either swap tiles, or pull from pool
-				//check fitness, incremental calculation
+				//swap first, intentionally avoid OO-ness for better performance
+				int index1 = rand.nextInt(targetImageLen), index2 = rand.nextInt(targetImageLen);
+				AnalyzedImage img1 = solutionImageTiles.get(index1), img2 = solutionImageTiles.get(index2);
+				AnalyzedImage target1 = targetImageTiles.get(index1), target2 = targetImageTiles.get(index2);
+				float newFitness1 = evaluateFitness(img2, target1);
+				float newFitness2 = evaluateFitness(img1, target2);
+				float newFitnessChange1 = newFitness1 - currentFitness[index1]; //negative is good
+				float newFitnessChange2 = newFitness2 - currentFitness[index2];
+				float changeInFitnessSwap = newFitnessChange1 + newFitnessChange2;
 				
-				//take new state
+				//take from pool
+				int index3 = rand.nextInt(targetImageLen);
+				AnalyzedImage fromPool = maxDupList.getItem();
+				float newFitness3 = evaluateFitness(fromPool, targetImageTiles.get(index3));
+				float changeInFitnessFromPool =  newFitness3 - currentFitness[index3]; //negative is good
 				
-				//call handler
+				if (changeInFitnessSwap<changeInFitnessFromPool){
+					if(changeInFitnessSwap<0){
+						//take swap
+						currentFitness[index1]=newFitness1;
+						currentFitness[index2]=newFitness2;
+						solutionImageTiles.set(index1, img2);
+						solutionImageTiles.set(index2, img1);
+						maxDupList.putBack(fromPool); //TODO implement peek for duplist
+					} else {
+						//no improvement
+						maxDupList.putBack(fromPool);
+					}
+				} else{
+					if(changeInFitnessFromPool<0){
+						//take from pool
+						currentFitness[index3]=newFitness3;
+						solutionImageTiles.set(index3, fromPool);
+					} else{
+						//no improvement
+						maxDupList.putBack(fromPool);
+					}
+				}
+				
 				for (NewStateListener listener : listeners) {
 					listener.handle(null);//TODO change to something intelligent
 				}
@@ -123,21 +157,17 @@ public class GeneratorSimpleImpl implements Generator {
 		listeners.remove(listener);
 	}
 	
-	private void mutate() {
-		
-	}
-	
-	private float evaluateFitness(List<AnalyzedImage> a, List<AnalyzedImage> b){
+	private float[] evaluateFitness(List<AnalyzedImage> a, List<AnalyzedImage> b){
 		int aSize = a.size();
 		int bSize = b.size();
 		if(aSize!=bSize){
 			throw new RuntimeException("Incompatible lists to evaluate fitness on, different sizes");
 		}
-		float fitness = 0;
+		float[] result = new float[aSize];
 		for(int i = 0;i<aSize;i++){
-			fitness += evaluateFitness(a.get(i), b.get(i));
+			result[i] = evaluateFitness(a.get(i), b.get(i));
 		}
-		return fitness;
+		return result;
 	}
 	
 	//Higher fitness is worse
@@ -151,7 +181,6 @@ public class GeneratorSimpleImpl implements Generator {
 				fitnessSum += LABColorDistance(aValues[i][j],bValues[i][j]);//TODO:Make sure this is never negative!
 			}
 		}
-		
 		return fitnessSum;
 	}
 	
