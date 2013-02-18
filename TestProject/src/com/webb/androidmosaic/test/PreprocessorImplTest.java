@@ -29,7 +29,7 @@ public class PreprocessorImplTest extends ActivityTestCase{
 		Bitmap bitmap = BitmapFactory.decodeStream(ts);
 		List<Bitmap> listOfBitmaps = new ArrayList<Bitmap>();
 		listOfBitmaps.add(bitmap);
-		Configuration gc = new Configuration(listOfBitmaps, 5);
+		Configuration gc = new Configuration(listOfBitmaps, 5, 10, 10);
 		Preprocessor p = new PreprocessorImpl(gc);
 		p.analyze(listOfBitmaps);
 	}

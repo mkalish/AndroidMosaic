@@ -3,9 +3,7 @@ package com.webb.androidmosaic.generation.generator;
 import static com.webb.androidmosaic.generation.ColorSpaceUtils.LABColorDistance;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -15,6 +13,7 @@ import android.graphics.Bitmap;
 import com.webb.androidmosaic.generation.AnalyzedImage;
 import com.webb.androidmosaic.generation.Configuration;
 import com.webb.androidmosaic.generation.LABValue;
+import com.webb.androidmosaic.generation.MaxDuplicatesList;
 import com.webb.androidmosaic.generation.NewStateListener;
 import com.webb.androidmosaic.generation.preprocessor.Preprocessor;
 import com.webb.androidmosaic.generation.preprocessor.PreprocessorFactory;
@@ -23,8 +22,8 @@ public class GeneratorSimpleImpl implements Generator {
 	private List<AnalyzedImage> targetImageTiles = new ArrayList<AnalyzedImage>();
 	private List<AnalyzedImage> solutionImageTiles = new ArrayList<AnalyzedImage>();
 	private List<AnalyzedImage> poolImageTiles = new ArrayList<AnalyzedImage>();
-	private Map<AnalyzedImage, Integer> tileUseCounts = new HashMap<AnalyzedImage, Integer>();
 	private volatile ConcurrentLinkedQueue<NewStateListener> listeners;
+	private MaxDuplicatesList<AnalyzedImage> maxDupList;
 	
 	private Random rand = new Random();
 	private int maxDuplicates = Integer.MAX_VALUE;
@@ -40,18 +39,16 @@ public class GeneratorSimpleImpl implements Generator {
 		this.preprocessor = PreprocessorFactory.getPreprocessor(config);
 		this.poolImageTiles = preprocessor.analyze(config.getImagePool());
 		maxDuplicates = config.getMaxDuplicates();
+		this.maxDupList = new MaxDuplicatesList<AnalyzedImage>(maxDuplicates, poolImageTiles);
 	}
-	
 	
 	public void setTargetImage(Bitmap target){
 		this.targetImageTiles = analyzeTargetImage(target);
 	}
 
  	public void start() {
- 		//check target null
- 		//start thread
  		if(targetImageTiles==null){
- 			throw new RuntimeException("Target image tiles null");
+ 			throw new RuntimeException("Target image tiles are null");
  		}
 		GeneratorLoop gLoop = new GeneratorLoop();
 		gLoop.start();
@@ -64,13 +61,12 @@ public class GeneratorSimpleImpl implements Generator {
 		GeneratorLoop(){
 			//Initialize solution randomly
 			for(int i = 0;i<poolImageTiles.size();i++){
-				solutionImageTiles.add(randomSelectionFromPool(maxDuplicates));
+				solutionImageTiles.add(maxDupList.getItem());
 			}
 			//Initialize fitness
 			//should probably be an array of floats for efficient incremental updates
 			currentFitness = evaluateFitness(targetImageTiles, solutionImageTiles); 
 		}
-		
 		
  		@Override
 		public void run() {
@@ -80,7 +76,7 @@ public class GeneratorSimpleImpl implements Generator {
 				checkPaused();
 				
 				//mutate
-				
+					//Either swap tiles, or pull from pool
 				//check fitness, incremental calculation
 				
 				//take new state
@@ -131,24 +127,6 @@ public class GeneratorSimpleImpl implements Generator {
 		
 	}
 	
-	//TODO: THIS WILL BREAK IF no suitable image is found! make more sophisticated (or will hang forever/be slow)
-	private AnalyzedImage randomSelectionFromPool(int maxDuplicates){
-		while(true){
-			int index = rand.nextInt(poolImageTiles.size());
-			AnalyzedImage ai = poolImageTiles.get(index);
-			Integer count = tileUseCounts.get(ai);
-			if(count==null){
-				count = Integer.valueOf(0);
-				tileUseCounts.put(ai, count);
-			}
-			if(count+1<=maxDuplicates){
-				count = Integer.valueOf(count+1);
-				tileUseCounts.put(ai, count);
-				return ai;
-			}
-		}
-	}
-	
 	private float evaluateFitness(List<AnalyzedImage> a, List<AnalyzedImage> b){
 		int aSize = a.size();
 		int bSize = b.size();
@@ -173,6 +151,7 @@ public class GeneratorSimpleImpl implements Generator {
 				fitnessSum += LABColorDistance(aValues[i][j],bValues[i][j]);//TODO:Make sure this is never negative!
 			}
 		}
+		
 		return fitnessSum;
 	}
 	

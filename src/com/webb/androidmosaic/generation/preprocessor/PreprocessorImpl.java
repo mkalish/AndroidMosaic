@@ -28,7 +28,6 @@ public class PreprocessorImpl implements Preprocessor {
 	
 	private AnalyzedImage analyze (Bitmap bitmap){
 		int divisions = gc.getTileDivisions();
-		
 		//crop to square, TODO: should probably crop from center
 		int shortSideLen = Math.min(bitmap.getHeight(),bitmap.getWidth());
 		bitmap = cropToSquare(bitmap, shortSideLen);
