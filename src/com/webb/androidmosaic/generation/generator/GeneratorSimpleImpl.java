@@ -23,7 +23,7 @@ public class GeneratorSimpleImpl implements Generator {
 	private List<AnalyzedImage> solutionImageTiles = new ArrayList<AnalyzedImage>();
 	private int targetImageLen;
 	private List<AnalyzedImage> poolImageTiles = new ArrayList<AnalyzedImage>();
-	private volatile ConcurrentLinkedQueue<NewStateListener> listeners;
+	private volatile ConcurrentLinkedQueue<NewStateListener> listeners = new ConcurrentLinkedQueue<NewStateListener>();
 	private MaxDuplicatesList<AnalyzedImage> maxDupList;
 	
 	private Random rand = new Random();
@@ -36,7 +36,6 @@ public class GeneratorSimpleImpl implements Generator {
 	
 	protected GeneratorSimpleImpl(Configuration config){
 		this.config = config; //consider unpacking config instead
-		
 		this.preprocessor = PreprocessorFactory.getPreprocessor(config);
 		this.poolImageTiles = preprocessor.analyze(config.getImagePool());
 		maxDuplicates = config.getMaxDuplicates();
@@ -49,8 +48,8 @@ public class GeneratorSimpleImpl implements Generator {
 	}
 
  	public void start() {
- 		if(targetImageTiles==null){
- 			throw new RuntimeException("Target image tiles are null");
+ 		if(targetImageTiles.size()==0){
+ 			throw new RuntimeException("Target image tiles are empty");
  		}
 		GeneratorLoop gLoop = new GeneratorLoop();
 		gLoop.start();
@@ -63,10 +62,11 @@ public class GeneratorSimpleImpl implements Generator {
 		GeneratorLoop(){
 			//Initialize solution randomly
 			for(int i = 0;i<targetImageTiles.size();i++){
-				solutionImageTiles.add(maxDupList.getItem());
+				AnalyzedImage ai = maxDupList.randomPeek();
+				maxDupList.takeItem(ai);
+				solutionImageTiles.add(ai);
 			}
 			//Initialize fitness
-			//should probably be an array of floats for efficient incremental updates
 			currentFitness = evaluateFitness(targetImageTiles, solutionImageTiles); 
 		}
 		
@@ -89,7 +89,7 @@ public class GeneratorSimpleImpl implements Generator {
 				
 				//take from pool
 				int index3 = rand.nextInt(targetImageLen);
-				AnalyzedImage fromPool = maxDupList.getItem();
+				AnalyzedImage fromPool = maxDupList.randomPeek();
 				float newFitness3 = evaluateFitness(fromPool, targetImageTiles.get(index3));
 				float changeInFitnessFromPool =  newFitness3 - currentFitness[index3]; //negative is good
 				
@@ -100,20 +100,15 @@ public class GeneratorSimpleImpl implements Generator {
 						currentFitness[index2]=newFitness2;
 						solutionImageTiles.set(index1, img2);
 						solutionImageTiles.set(index2, img1);
-						maxDupList.putBack(fromPool); //TODO implement peek for duplist
-					} else {
-						//no improvement
-						maxDupList.putBack(fromPool);
 					}
 				} else{
 					if(changeInFitnessFromPool<0){
 						//take from pool
 						currentFitness[index3]=newFitness3;
+						maxDupList.putBack(solutionImageTiles.get(index3));
+						maxDupList.takeItem(fromPool);
 						solutionImageTiles.set(index3, fromPool);
-					} else{
-						//no improvement
-						maxDupList.putBack(fromPool);
-					}
+					} 
 				}
 				
 				for (NewStateListener listener : listeners) {
@@ -126,7 +121,9 @@ public class GeneratorSimpleImpl implements Generator {
 			//Pause if necessary
 			if(paused.get()==true){
 				try {
-					paused.wait();
+					synchronized (paused) {
+						paused.wait();
+					}
 				} catch (InterruptedException e) {
 					Thread.currentThread().interrupt();
 				}
@@ -136,7 +133,9 @@ public class GeneratorSimpleImpl implements Generator {
  	
  	public void resume(){
  		paused.set(false);
- 		paused.notify();
+ 		synchronized (paused) {
+ 	 		paused.notify();
+		}
  	}
 
 	public void pause() {
@@ -144,8 +143,7 @@ public class GeneratorSimpleImpl implements Generator {
 	}
 
 	public void close() {
-		// TODO Auto-generated method stub
-		
+		//Release resources if you have any?
 	}
 
 	public void registerNewStateListener(NewStateListener listener) {

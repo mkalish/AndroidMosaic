@@ -43,19 +43,28 @@ public class ColorSpaceUtils {
 		float l1 = lab1.getL(), a1 = lab1.getA(), b1 = lab1.getB();
 		float l2 = lab2.getL(), a2 = lab2.getA(), b2 = lab2.getB();
 		float deltaL = l1-l2;
+		float a1square = a1*a1, b1square=b1*b1, a2square=a2*a2, b2square=b2*b2;
+		a1square = a1square < 0 ? 0 : a1square;
+		a2square = a2square < 0 ? 0 : a2square;
+		b1square = b1square < 0 ? 0 : b1square;
+		b2square = b2square < 0 ? 0 : b2square;
 		float c1 = (float)Math.sqrt((a1*a1)+(b1*b1));
 		float c2 = (float)Math.sqrt((a2*a2)+(b2*b2));
 		float deltaC = c1-c2;
 		float deltaA = a1-a2;
 		float deltaB = b1-b2;
-		float deltaH = (float)Math.sqrt((deltaA*deltaA)+(deltaB*deltaB)-(deltaC*deltaC));
+		float intermediate = (deltaA*deltaA)+(deltaB*deltaB)-(deltaC*deltaC);
+		intermediate = intermediate<0 ? 0 : intermediate; //why is this necessary
+		float deltaH = (float)Math.sqrt(intermediate);
 		float sl = 1f;
 		float sc = 1f + 0.045f*c1;
 		float sh = 1f + 0.015f*c1;
 		float term1 = (deltaL/sl);
 		float term2 = (deltaC/sc);
 		float term3 = (deltaH/sh);
-		float deltaE = (float)Math.sqrt((term1*term1)+(term2*term2)+(term3*term3));
-		return deltaE;
+		intermediate = (term1*term1)+(term2*term2)+(term3*term3);
+		intermediate = intermediate<0 ? 0 : intermediate; //why is this necessary
+		float deltaE = (float)Math.sqrt(intermediate);
+		return (float)deltaE;
 	}
 }

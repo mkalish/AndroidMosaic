@@ -28,9 +28,7 @@ public class MaxDuplicatesList<E> {
 		}
 	}
 	
-	public E getItem(){
-		//generate random number
-		//get item, increment count, disqualify if necessary
+	public E randomPeek(){
 		int size = validItems.size();
 		if (size==0){
 			//shit, catch this earlier in the class that uses it.
@@ -38,6 +36,10 @@ public class MaxDuplicatesList<E> {
 		}
 		int randomNumber = rnd.nextInt(size);
 		E e = validItems.get(randomNumber);
+		return e;
+	}
+	
+	public void takeItem(E e){
 		Integer count = usageCounts.get(e);
 		count += 1;
 		usageCounts.put(e, count);
@@ -45,7 +47,6 @@ public class MaxDuplicatesList<E> {
 			validItems.remove(e);
 			invalidItems.add(e);
 		}
-		return e;
 	}
 	
 	public void putBack(E e){
