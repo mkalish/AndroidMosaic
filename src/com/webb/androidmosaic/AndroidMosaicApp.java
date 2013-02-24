@@ -12,6 +12,7 @@ import android.app.Application;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Log;
 
 import com.webb.androidmosaic.generation.AnalyzedImage;
 import com.webb.androidmosaic.generation.Configuration;
@@ -31,6 +32,7 @@ public class AndroidMosaicApp extends Application {
 	private List<AnalyzedImage> analyzedImages;
 	private File[] processedImages;
 	private static int IMAGE_ID = 0;
+	private static final String TAG = "AndroidMosaicApplication";
 
 	
 	private void collectBitmaps(File[] imageFiles) {
@@ -45,7 +47,7 @@ public class AndroidMosaicApp extends Application {
 			try {
 				saveAnalyzedImage(image);
 			} catch (Exception e) {
-				e.printStackTrace();
+				Log.e(TAG, "Unable to save files");
 			}
 		}
 	}
@@ -53,9 +55,10 @@ public class AndroidMosaicApp extends Application {
 	private void saveAnalyzedImage(AnalyzedImage image) throws IOException {
 		String filePath = analyzedImageDirectory + "/" + IMAGE_ID;
 		FileOutputStream fos = openFileOutput(filePath, Context.MODE_PRIVATE);
-			ObjectOutputStream os = new ObjectOutputStream(fos);
-			os.writeObject(image);
-
+		ObjectOutputStream os = new ObjectOutputStream(fos);
+		os.writeObject(image);
+		os.close();
+		fos.close();
 	}
 	
 	
@@ -69,7 +72,7 @@ public class AndroidMosaicApp extends Application {
 		analyzedImages = preprocessor.analyze(bitmaps);
 		
 		 
-		
+		saveAnalyzedImages(analyzedImages);
 		
 		
 	}
