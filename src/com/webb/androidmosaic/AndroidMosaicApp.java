@@ -34,6 +34,7 @@ public class AndroidMosaicApp extends Application {
 	AssetManager mngr;
 	private String imageDirectory ="images";
 	private String analyzedImageDirectory = "analyzedImages";
+	private String bitmapDirectory = "bitmaps";
 	private Configuration cfg;
 	private Preprocessor preprocessor;
 	private List<AnalyzedImage> analyzedImages;
@@ -47,25 +48,30 @@ public class AndroidMosaicApp extends Application {
 		if(images == null) {
 			Log.e(APP_START, "Did not get images");
 		}
-		collectBitmaps(images);
+		
+		File directoryBitMaps = getApplicationContext().getDir(bitmapDirectory, MODE_PRIVATE);
+		if(directoryBitMaps == null) {
+			Log.e(APP_START, "Unable to get or create bitmap directory");
+		}
+		collectBitmaps(images, directoryBitMaps);
 		
 		cfg = new Configuration(bitmaps, NUMBER_OF_DIVISIONS, NUMBER_OF_WIDTH_DIVISIONS, MAX_DUPLICATES);
 		preprocessor = PreprocessorFactory.getPreprocessor(cfg);
 		analyzedImages = preprocessor.analyze(bitmaps);
 		
-		File directory = getApplicationContext().getDir(analyzedImageDirectory, MODE_WORLD_READABLE);
-		if(directory == null) {
+		File directoryAnalyzedImages = getApplicationContext().getDir(analyzedImageDirectory, MODE_PRIVATE);
+		if(directoryAnalyzedImages == null) {
 			Log.e(APP_START, "Unable to create or get analyzed images directory");
 		}
 		
-		saveAnalyzedImages(directory, analyzedImages);
+		saveAnalyzedImages(directoryAnalyzedImages, analyzedImages);
 		
 		Log.d(APP_START, "Images collected");
 		
 		if(DEBUG) {
 			AnalyzedImage imageTest = null;
 			try {
-				FileInputStream fis = new FileInputStream(directory.getAbsolutePath() + "/0");
+				FileInputStream fis = new FileInputStream(directoryAnalyzedImages.getAbsolutePath() + "/0");
 				ObjectInputStream ois = new ObjectInputStream(fis);
 				imageTest = (AnalyzedImage) ois.readObject();
 			} catch (FileNotFoundException e) {
@@ -88,6 +94,7 @@ public class AndroidMosaicApp extends Application {
 	}
 
 	
+
 	private void saveAnalyzedImages(File directory,
 			List<AnalyzedImage> analyzedImages) {
 		for(int i=0; i<= analyzedImages.size()-1; i++) {
@@ -117,20 +124,43 @@ public class AndroidMosaicApp extends Application {
 	}
 
 
-	private void collectBitmaps(String[] images) {
+	private void collectBitmaps(String[] images, File directoryBitMaps) {
 		InputStream input = null;
-		for(String image: images) {
+		for(int i=0; i<= images.length-1; i++) {
 			try {
-				input = mngr.open(imageDirectory+"/"+image);
+				input = mngr.open(imageDirectory+"/"+images[i]);
 			} catch (IOException e) {
 				Log.e(APP_START, "Unable to open image file");
 			}
+			Bitmap bitmap = BitmapFactory.decodeStream(input);
+			saveBitMap(bitmap, directoryBitMaps, i);
 			bitmaps.add(BitmapFactory.decodeStream(input));
 		}
 	}
 	
 	
-	
+	//This method should be consolidated withe the saveAnalyzedImage() method
+	//
+	private void saveBitMap(Bitmap bitmap, File directoryBitMaps, int id) {
+		FileOutputStream fos = null;
+		File fileToSave = null;
+		try {
+			fileToSave = new File(directoryBitMaps+"/"+id);
+			fos = new FileOutputStream(fileToSave);
+			bitmap.compress(Bitmap.CompressFormat.JPEG, 70, fos);
+		} catch(IOException e) {
+			Log.e(APP_START, "Unable to compress and save bitmap");
+			e.printStackTrace();
+		}
+		Log.i(APP_START, "Bitmap saved to disk");
+		
+	}
+
+
+
+
+
+
 	String[] getListOfImages() {
 		mngr = getAssets();
 		String[] images = null;

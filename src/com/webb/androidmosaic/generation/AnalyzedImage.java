@@ -14,4 +14,6 @@ public class AnalyzedImage implements Serializable {
 	public LABValue[][] getLabValues(){
 		return labValues;
 	}
+	
+
 }
