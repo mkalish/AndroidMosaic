@@ -1,7 +1,9 @@
 package com.webb.androidmosaic.generation;
 
+import java.io.Serializable;
+
 //Consider replacing with an array for performance.
-public class LABValue {
+public class LABValue implements Serializable {
 	private final float l;
 	private final float a;
 	private final float b;
