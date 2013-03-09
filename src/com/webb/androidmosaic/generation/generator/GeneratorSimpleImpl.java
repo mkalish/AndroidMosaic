@@ -112,7 +112,11 @@ public class GeneratorSimpleImpl implements Generator {
 				}
 				
 				for (NewStateListener listener : listeners) {
-					listener.handle(null);//TODO change to something intelligent
+					List<AnalyzedImage> copiedList = new ArrayList<AnalyzedImage>(targetImageLen);
+					for (AnalyzedImage ai : solutionImageTiles){
+						copiedList.add(ai);
+					}
+					listener.handle(copiedList);//TODO change to something intelligent
 				}
 			}
 		}
