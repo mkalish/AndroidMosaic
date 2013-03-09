@@ -205,4 +205,9 @@ public class GeneratorSimpleImpl implements Generator {
 		}
 		return preprocessor.analyze(tiles);
 	}
+
+
+	public List<AnalyzedImage> getSolutionTiles() {
+		return solutionImageTiles;
+	}
 }

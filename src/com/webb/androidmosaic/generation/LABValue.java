@@ -4,6 +4,10 @@ import java.io.Serializable;
 
 //Consider replacing with an array for performance.
 public class LABValue implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1260265809782472513L;
 	private final float l;
 	private final float a;
 	private final float b;

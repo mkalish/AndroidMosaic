@@ -45,8 +45,8 @@ public class MainMenuActivity extends Activity {
         makeAMosaic.setOnClickListener(new OnClickListener() {
 			
 			public void onClick(View v) {
-				Intent cameraPreview = new Intent(getBaseContext(), CameraPreviewActivity.class);
-				startActivityForResult(cameraPreview, 1234);
+				Intent takeAPhoto = new Intent(getBaseContext(), TakePhotoActivity.class);
+				startActivity(takeAPhoto);
 			}
 		});
 /*        //Temporary test code, TODO: remove

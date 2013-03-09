@@ -7,6 +7,8 @@
         android:minSdkVersion="8"
         android:targetSdkVersion="15" />
 
+    
+    <uses-feature android:name="android.hardware.camera"></uses-feature> 
 
     
     <application
@@ -31,6 +33,15 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity 
+            android:name=".TakePhotoActivity"
+            android:label="@string/makeAMosaic">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+            
         </activity>
         <activity
             android:name=".CameraPreviewActivity"

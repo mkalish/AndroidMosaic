@@ -1,7 +1,10 @@
 package com.webb.androidmosaic.generation.generator;
 
+import java.util.List;
+
 import android.graphics.Bitmap;
 
+import com.webb.androidmosaic.generation.AnalyzedImage;
 import com.webb.androidmosaic.generation.NewStateListener;
 
 
@@ -18,4 +21,5 @@ public interface Generator {
 	void registerNewStateListener(NewStateListener listener);
 	//Potential configuration methods, could instead put configuration in the factory
 	void removeNewStateListener(NewStateListener listener);
+	List<AnalyzedImage> getSolutionTiles();
 }
