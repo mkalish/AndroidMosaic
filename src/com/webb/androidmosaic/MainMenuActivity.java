@@ -49,19 +49,6 @@ public class MainMenuActivity extends Activity {
 				startActivity(takeAPhoto);
 			}
 		});
-/*        //Temporary test code, TODO: remove
-        PreprocessorConfiguration cfg = new PreprocessorConfiguration(5);
-        Preprocessor preprocessor = PreprocessorFactory.getPreprocessor(cfg);
-        List<AnalyzedImage> ais = preprocessor.analyze(some bitmaps);
-        GeneratorConfiguration gcfg = new GeneratorConfiguration(ais, a target bitmap);
-        Generator generator = GeneratorFactory.getGenerator(gcfg);
-        NewStateListener nsl = new NewStateListener() {
-        	public void handle(List<List<Bitmap>> state) {
-        		System.out.println("New state received");
-        	}
-        };
-        generator.registerNewStateListener(nsl);
-        generator.start();*/
     }
 
     @Override

@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -14,6 +15,7 @@ import android.widget.LinearLayout;
 
 import com.webb.androidmosaic.generation.AnalyzedImage;
 import com.webb.androidmosaic.generation.Configuration;
+import com.webb.androidmosaic.generation.NewStateListener;
 import com.webb.androidmosaic.generation.generator.Generator;
 import com.webb.androidmosaic.generation.generator.GeneratorFactory;
 
@@ -25,6 +27,8 @@ public class TakePhotoActivity extends Activity {
 	private Bitmap image;
 	private Generator generator;
 	private Configuration cfg;
+	private List<AnalyzedImage> solution; 
+	private String MosaicGeneratorTag = "Mosaic Generation";
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -65,8 +69,17 @@ public class TakePhotoActivity extends Activity {
 	private  void createPhotoMosaic(Bitmap image) {
 		generator = GeneratorFactory.getGenerator(cfg);
 		generator.setTargetImage(image);
+		NewStateListener generatorStateListener = new NewStateListener() {
+			
+			public void handle(List<AnalyzedImage> state) {
+				Log.i(MosaicGeneratorTag, "New state generated");
+				solution = generator.getSolutionTiles();
+				// TODO code for animating mosaic change
+			}
+		};
+		generator.registerNewStateListener(generatorStateListener);
 		generator.start();
-		List<AnalyzedImage> solution = generator.getSolutionTiles();
+		generator.getSolutionTiles();
 		//Code could follow here to add image to screen
 		
 		

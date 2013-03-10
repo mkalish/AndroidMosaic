@@ -31,7 +31,7 @@ public class AndroidMosaicApp extends Application {
 	private static final int NUMBER_OF_WIDTH_DIVISIONS = 9;
 	private static final int NUMBER_OF_DIVISIONS = 9;
 	private List<Bitmap> bitmaps;
-	AssetManager mngr;
+	private AssetManager mngr;
 	private String imageDirectory ="images";
 	private String analyzedImageDirectory = "analyzedImages";
 	private String bitmapDirectory = "bitmaps";
