@@ -13,11 +13,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Application;
-import android.content.Context;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.os.Debug;
 import android.util.Log;
 
 import com.webb.androidmosaic.generation.AnalyzedImage;
@@ -74,6 +72,7 @@ public class AndroidMosaicApp extends Application {
 				FileInputStream fis = new FileInputStream(directoryAnalyzedImages.getAbsolutePath() + "/0");
 				ObjectInputStream ois = new ObjectInputStream(fis);
 				imageTest = (AnalyzedImage) ois.readObject();
+				ois.close();
 			} catch (FileNotFoundException e) {
 				Log.e(APP_START, "Unable to open image file");
 				e.printStackTrace();

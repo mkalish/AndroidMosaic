@@ -27,6 +27,7 @@ public class TakePhotoActivity extends Activity {
 	private Bitmap image;
 	private Generator generator;
 	private Configuration cfg;
+	@SuppressWarnings("unused")
 	private List<AnalyzedImage> solution; 
 	private String MosaicGeneratorTag = "Mosaic Generation";
 	

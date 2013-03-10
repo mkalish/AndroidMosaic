@@ -13,7 +13,9 @@ import android.widget.EditText;
 public class WelcomeActivity extends Activity {
 
 	private Button login;
+	@SuppressWarnings("unused")
 	private EditText username;
+	@SuppressWarnings("unused")
 	private EditText pw;
 	
     @Override

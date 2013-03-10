@@ -3,19 +3,6 @@ package com.webb.androidmosaic;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import java.util.List;
-
-import com.webb.androidmosaic.generation.AnalyzedImage;
-import com.webb.androidmosaic.generation.Configuration;
-import com.webb.androidmosaic.generation.NewStateListener;
-import com.webb.androidmosaic.generation.generator.Generator;
-import com.webb.androidmosaic.generation.generator.GeneratorFactory;
-import com.webb.androidmosaic.generation.preprocessor.Preprocessor;
-import com.webb.androidmosaic.generation.preprocessor.PreprocessorFactory;
-
-import android.os.Bundle;
-import android.app.Activity;
-import android.graphics.Bitmap;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
