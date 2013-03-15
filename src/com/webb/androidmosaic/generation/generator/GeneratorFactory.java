@@ -13,8 +13,6 @@ import android.graphics.Bitmap;
  */
 public class GeneratorFactory {
 	public static Generator getGenerator(Configuration cfg){ //These arguments will expand
-		Bitmap targetImage = null;
-		Set<AnalyzedImage> imagePool = null;
 		return new GeneratorSimpleImpl(cfg); //TODO: Maybe unpack config before sending it in?
 	}
 }

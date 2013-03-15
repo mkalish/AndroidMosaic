@@ -42,6 +42,7 @@ public class AndroidMosaicApp extends Application {
 	
 	public void onCreate() {
 		bitmaps = new ArrayList<Bitmap>();
+		List<AnalyzedImage> dummyList = new ArrayList<AnalyzedImage>(); //TODO: replace this, just to satisfy config
 		String[] images = getListOfImages();
 		if(images == null) {
 			Log.e(APP_START, "Did not get images");
@@ -53,7 +54,7 @@ public class AndroidMosaicApp extends Application {
 		}
 		collectBitmaps(images, directoryBitMaps);
 		
-		cfg = new Configuration(bitmaps, NUMBER_OF_DIVISIONS, NUMBER_OF_WIDTH_DIVISIONS, MAX_DUPLICATES);
+		cfg = new Configuration(dummyList, NUMBER_OF_DIVISIONS, NUMBER_OF_WIDTH_DIVISIONS, MAX_DUPLICATES);
 		preprocessor = PreprocessorFactory.getPreprocessor(cfg);
 		analyzedImages = preprocessor.analyze(bitmaps);
 		
