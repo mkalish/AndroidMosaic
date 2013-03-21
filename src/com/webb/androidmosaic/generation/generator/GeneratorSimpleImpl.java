@@ -37,7 +37,7 @@ public class GeneratorSimpleImpl implements Generator {
 	protected GeneratorSimpleImpl(Configuration config){
 		this.config = config; //consider unpacking config instead
 		this.preprocessor = PreprocessorFactory.getPreprocessor(config);
-		this.poolImageTiles = preprocessor.analyze(config.getImagePool());
+		this.poolImageTiles = config.getImagePool();
 		maxDuplicates = config.getMaxDuplicates();
 		this.maxDupList = new MaxDuplicatesList<AnalyzedImage>(maxDuplicates, poolImageTiles);
 	}
