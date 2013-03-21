@@ -55,12 +55,14 @@ public class TakePhotoActivity extends Activity {
 			imageView.setImageBitmap(photo);
 			image = photo;
 		}
+		
 		Button button = new Button(this);
 		button.setText("Use this picture");
 		button.setId(1);
 		button.setOnClickListener(new OnClickListener() {
 			
 			public void onClick(View v) {
+				Log.i(MosaicGeneratorTag, "Now creating mosaic");
 				createPhotoMosaic(image);
 			}
 		});
@@ -74,13 +76,16 @@ public class TakePhotoActivity extends Activity {
 			
 			public void handle(List<AnalyzedImage> state) {
 				Log.i(MosaicGeneratorTag, "New state generated");
-				solution = generator.getSolutionTiles();
 				// TODO code for animating mosaic change
 			}
 		};
 		generator.registerNewStateListener(generatorStateListener);
+		Log.i(MosaicGeneratorTag, "Listener attached");
 		generator.start();
-		generator.getSolutionTiles();
+		Log.i(MosaicGeneratorTag, "Generator has finished");
+		if(generator.getSolutionTiles() != null) {
+			solution = generator.getSolutionTiles();
+		}
 		//Code could follow here to add image to screen
 		
 		

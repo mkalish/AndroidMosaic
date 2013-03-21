@@ -138,7 +138,7 @@ public class AndroidMosaicApp extends Application {
 	}
 	
 	
-	//This method should be consolidated withe the saveAnalyzedImage() method
+	//This method should be consolidated with the saveAnalyzedImage() method
 	//
 	private void saveBitMap(Bitmap bitmap, File directoryBitMaps, int id) {
 		FileOutputStream fos = null;
