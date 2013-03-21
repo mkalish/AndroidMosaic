@@ -67,6 +67,9 @@ public class AndroidMosaicApp extends Application {
 		
 		Log.d(APP_START, "Images collected");
 		
+		
+		cfg.setImagePool(analyzedImages);
+		
 		if(DEBUG) {
 			AnalyzedImage imageTest = null;
 			try {

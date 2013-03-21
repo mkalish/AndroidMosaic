@@ -6,7 +6,7 @@ import android.graphics.Bitmap;
 
 
 public class Configuration {
-	private final List<AnalyzedImage> imagePool;
+	private List<AnalyzedImage> imagePool;
 	private final int tileDivisions;
 	private final int targetWidthDivisions;
 	private int maxDuplicates;
@@ -32,5 +32,9 @@ public class Configuration {
 
 	public int getMaxDuplicates() {
 		return maxDuplicates;
+	}
+	
+	public void setImagePool(List<AnalyzedImage> imagePool) {
+		this.imagePool = imagePool;
 	}
 }
