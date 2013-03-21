@@ -70,7 +70,8 @@ public class TakePhotoActivity extends Activity {
 	}
 	
 	private  void createPhotoMosaic(Bitmap image) {
-		generator = GeneratorFactory.getGenerator(cfg);
+		AndroidMosaicApp app = (AndroidMosaicApp) getApplicationContext();
+		generator = GeneratorFactory.getGenerator(app.getCfg());
 		generator.setTargetImage(image);
 		NewStateListener generatorStateListener = new NewStateListener() {
 			

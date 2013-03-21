@@ -158,9 +158,6 @@ public class AndroidMosaicApp extends Application {
 
 
 
-
-
-
 	String[] getListOfImages() {
 		mngr = getAssets();
 		String[] images = null;
@@ -170,5 +167,13 @@ public class AndroidMosaicApp extends Application {
 			Log.e(APP_START, "Got no images");
 		}
 		return images;
+	}
+	
+	public List<AnalyzedImage> getAnalyzedImages() {
+		return analyzedImages;
+	}
+	
+	public Configuration getCfg() {
+		return cfg;
 	}
 }
