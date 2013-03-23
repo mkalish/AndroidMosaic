@@ -5,6 +5,8 @@ import java.util.List;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -30,6 +32,7 @@ public class TakePhotoActivity extends Activity {
 	@SuppressWarnings("unused")
 	private List<AnalyzedImage> solution; 
 	private String MosaicGeneratorTag = "Mosaic Generation";
+	private int count = 0;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -76,20 +79,39 @@ public class TakePhotoActivity extends Activity {
 		NewStateListener generatorStateListener = new NewStateListener() {
 			
 			public void handle(List<AnalyzedImage> state) {
-				Log.i(MosaicGeneratorTag, "New state generated");
+				if(count >= 500) {
+					generator.pause();
+					solution = generator.getSolutionTiles();
+					saveMosaic();
+					Log.d(MosaicGeneratorTag, "Image saved");
+				} else {
+					count++;
+				}
 				// TODO code for animating mosaic change
 			}
 		};
 		generator.registerNewStateListener(generatorStateListener);
 		Log.i(MosaicGeneratorTag, "Listener attached");
 		generator.start();
-		Log.i(MosaicGeneratorTag, "Generator has finished");
 		if(generator.getSolutionTiles() != null) {
 			solution = generator.getSolutionTiles();
 		}
 		//Code could follow here to add image to screen
 		
 		
+	}
+	
+	private boolean saveMosaic() {
+		Bitmap mosaicBitmap = Bitmap.createBitmap(500, 500, Bitmap.Config.ARGB_8888);
+		Canvas mosaic = new Canvas(mosaicBitmap);
+		
+		for(AnalyzedImage analyzedImage: solution) {
+			
+		}
+		
+		
+		
+		return false;
 	}
 
 }

@@ -110,8 +110,10 @@ public class AndroidMosaicApp extends Application {
 		FileOutputStream fos = null;
 		ObjectOutputStream oos = null;
 		File fileToSave = null;
+		String filePath = directory+"/"+id;
+		analyzedImage.setFile(filePath);
 		try {
-			fileToSave = new File(directory+"/"+id);
+			fileToSave = new File(filePath);
 			fos = new FileOutputStream(fileToSave);
 			oos = new ObjectOutputStream(fos);
 			oos.writeObject(analyzedImage);
