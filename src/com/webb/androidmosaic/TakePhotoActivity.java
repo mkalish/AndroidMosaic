@@ -1,5 +1,9 @@
 package com.webb.androidmosaic;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.List;
 
 import android.app.Activity;
@@ -14,6 +18,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.webb.androidmosaic.generation.AnalyzedImage;
 import com.webb.androidmosaic.generation.Configuration;
@@ -82,8 +87,10 @@ public class TakePhotoActivity extends Activity {
 				if(count >= 500) {
 					generator.pause();
 					solution = generator.getSolutionTiles();
-					saveMosaic();
-					Log.d(MosaicGeneratorTag, "Image saved");
+					if(saveMosaic()) {
+						Toast.makeText(getApplicationContext(), "Your mosaic has been saved", Toast.LENGTH_LONG).show();
+						Log.d(MosaicGeneratorTag, "Image saved");
+					}
 				} else {
 					count++;
 				}
@@ -105,12 +112,28 @@ public class TakePhotoActivity extends Activity {
 		Bitmap mosaicBitmap = Bitmap.createBitmap(500, 500, Bitmap.Config.ARGB_8888);
 		Canvas mosaic = new Canvas(mosaicBitmap);
 		
+		FileInputStream file = null;
+		int x = 0;
+		int y = 0;
 		for(AnalyzedImage analyzedImage: solution) {
-			
+			try {
+				file = new FileInputStream(new File(analyzedImage.getFile()));
+			} catch(IOException e) {
+				Log.e(MosaicGeneratorTag, "Unable to open corresponding bitmap");
+				e.printStackTrace();
+			}
+			Bitmap image = BitmapFactory.decodeStream(file);
+			if(image != null) {
+				mosaic.drawBitmap(mosaicBitmap, x, y, null);
+			}
 		}
 		
-		
-		
+		try {
+			mosaicBitmap.compress(Bitmap.CompressFormat.JPEG, 100, new FileOutputStream("/mnt/sdcard/image.jpg"));
+			return true;
+		} catch(IOException e) {
+			Log.e(MosaicGeneratorTag, "Unable to save the mosaic");
+		}
 		return false;
 	}
 
