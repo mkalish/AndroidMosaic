@@ -29,6 +29,9 @@ public class GeneratorSimpleImpl implements Generator {
 	private Random rand = new Random();
 	private int maxDuplicates = Integer.MAX_VALUE;
 	
+	private int imagesPerColumnInSolution = 0;
+	private int widthOfTiles = 0;
+	
 	private Preprocessor preprocessor;
 	private Configuration config;
 	
@@ -40,6 +43,24 @@ public class GeneratorSimpleImpl implements Generator {
 		this.poolImageTiles = config.getImagePool();
 		maxDuplicates = config.getMaxDuplicates();
 		this.maxDupList = new MaxDuplicatesList<AnalyzedImage>(maxDuplicates, poolImageTiles);
+	}
+	
+	public int getNumTilesPerRowInSolution(){
+		return config.getTargetWidthDivisions();
+	}
+	
+	public int getNumTilesPerColumnInSolution(){
+		if (imagesPerColumnInSolution==0){
+			throw new RuntimeException("No target image set yet");
+		}
+		return imagesPerColumnInSolution;
+	}
+	
+	public int getWidthOfTileInPixels(){
+		if (widthOfTiles==0){
+			throw new RuntimeException("No target image set yet");
+		}
+		return widthOfTiles;
 	}
 	
 	public void setTargetImage(Bitmap target){
@@ -203,11 +224,13 @@ public class GeneratorSimpleImpl implements Generator {
 		//calculate tile dimensions
 		int widthDivisions = config.getTargetWidthDivisions();
 		int targetWidth = target.getWidth();
-		int widthOfTiles = targetWidth/widthDivisions; //intentional integer division
+		widthOfTiles = targetWidth/widthDivisions; //intentional integer division
+	
 		int newTargetWidth = widthOfTiles*widthDivisions;
 		
 		int targetHeight = target.getHeight();
 		int heightDivisions = targetHeight/widthOfTiles; //intentional integer division
+		imagesPerColumnInSolution = heightDivisions;
 		int newTargetHeight = widthOfTiles*heightDivisions;
 		
 		//crop target, TODO: consider cropping from center
