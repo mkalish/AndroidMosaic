@@ -26,6 +26,7 @@ public class GeneratorSimpleImplTest extends ActivityTestCase {
 	
 	List<AnalyzedImage> stateHolder;
 	int timesUpdated = 0;
+	float currentFitnessLevel = Float.MAX_VALUE;
 
 	public void testEndToEnd() throws Exception{
 		
@@ -58,9 +59,10 @@ public class GeneratorSimpleImplTest extends ActivityTestCase {
 		Generator gen = GeneratorFactory.getGenerator(gc);
 		NewStateListener stateListener = new NewStateListener() {
 			@Override
-			public void handle(List<AnalyzedImage> state) {
+			public void handle(List<AnalyzedImage> state, float currentFitness) {
 				stateHolder = state;
 				timesUpdated++;
+				currentFitnessLevel = currentFitness;
 			}
 		};
 		gen.registerNewStateListener(stateListener);
@@ -68,7 +70,6 @@ public class GeneratorSimpleImplTest extends ActivityTestCase {
 		gen.start();
 		gen.pause();
 		gen.resume();
-		Thread.sleep(120000);
 		List<Object> iAmStupid = new ArrayList<Object>(); //just for a breakpoint
 	}
 }

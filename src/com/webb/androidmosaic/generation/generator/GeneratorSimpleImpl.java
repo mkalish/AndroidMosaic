@@ -58,6 +58,8 @@ public class GeneratorSimpleImpl implements Generator {
  	private class GeneratorLoop extends Thread {
 		int iterationsElapsed = 0;
 		float[] currentFitness;
+		float cumulativeFitness = 0;
+		boolean madeChangeThisiteration = false;
 		
 		GeneratorLoop(){
 			//Initialize solution randomly
@@ -67,7 +69,10 @@ public class GeneratorSimpleImpl implements Generator {
 				solutionImageTiles.add(ai);
 			}
 			//Initialize fitness
-			currentFitness = evaluateFitness(targetImageTiles, solutionImageTiles); 
+			currentFitness = evaluateFitness(targetImageTiles, solutionImageTiles);
+			for(int i = 0;i<currentFitness.length;i++){
+				cumulativeFitness += currentFitness[i];
+			}
 		}
 		
  		@Override
@@ -96,27 +101,34 @@ public class GeneratorSimpleImpl implements Generator {
 				if (changeInFitnessSwap<changeInFitnessFromPool){
 					if(changeInFitnessSwap<0){
 						//take swap
-						currentFitness[index1]=newFitness1;
-						currentFitness[index2]=newFitness2;
+						currentFitness[index1] = newFitness1;
+						currentFitness[index2] = newFitness2;
+						cumulativeFitness += changeInFitnessSwap;
 						solutionImageTiles.set(index1, img2);
 						solutionImageTiles.set(index2, img1);
+						madeChangeThisiteration = true;
 					}
 				} else{
 					if(changeInFitnessFromPool<0){
 						//take from pool
 						currentFitness[index3]=newFitness3;
+						cumulativeFitness += changeInFitnessFromPool;
 						maxDupList.putBack(solutionImageTiles.get(index3));
 						maxDupList.takeItem(fromPool);
 						solutionImageTiles.set(index3, fromPool);
+						madeChangeThisiteration = true;
 					} 
 				}
 				
-				for (NewStateListener listener : listeners) {
-					List<AnalyzedImage> copiedList = new ArrayList<AnalyzedImage>(targetImageLen);
-					for (AnalyzedImage ai : solutionImageTiles){
-						copiedList.add(ai);
+				if(madeChangeThisiteration){
+					for (NewStateListener listener : listeners) {
+						List<AnalyzedImage> copiedList = new ArrayList<AnalyzedImage>(targetImageLen);
+						for (AnalyzedImage ai : solutionImageTiles){
+							copiedList.add(ai); //todo copy this more efficiently
+						}
+						listener.handle(copiedList, cumulativeFitness);//TODO change to something intelligent
 					}
-					listener.handle(copiedList);//TODO change to something intelligent
+				madeChangeThisiteration = false;
 				}
 			}
 		}
