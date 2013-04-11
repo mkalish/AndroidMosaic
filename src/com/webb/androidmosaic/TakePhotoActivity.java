@@ -83,7 +83,7 @@ public class TakePhotoActivity extends Activity {
 		generator.setTargetImage(image);
 		NewStateListener generatorStateListener = new NewStateListener() {
 			
-			public void handle(List<AnalyzedImage> state) {
+			public void handle(List<AnalyzedImage> state, float currentFitness) {
 				if(count >= 500) {
 					generator.pause();
 					solution = generator.getSolutionTiles();

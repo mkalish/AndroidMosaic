@@ -22,4 +22,8 @@ public interface Generator {
 	//Potential configuration methods, could instead put configuration in the factory
 	void removeNewStateListener(NewStateListener listener);
 	List<AnalyzedImage> getSolutionTiles();
+	
+	int getNumTilesPerRowInSolution();
+	int getNumTilesPerColumnInSolution();
+	int getWidthOfTileInPixels();
 }
