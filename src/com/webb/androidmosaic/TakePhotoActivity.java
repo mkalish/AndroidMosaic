@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -30,7 +31,7 @@ public class TakePhotoActivity extends Activity {
 	
 	private static final int CAMERA_REQUEST = 1888;
 	private ImageView imageView;
-	private LinearLayout ll;
+	private Button makeMosaicButton;
 	private Bitmap image;
 	private Generator generator;
 	@SuppressWarnings("unused")
@@ -43,7 +44,6 @@ public class TakePhotoActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.imageview);
-		this.ll = (LinearLayout) this.findViewById(R.id.linearlayout1);
 		this.imageView = (ImageView) this.findViewById(R.id.imageView1);
 		Button photoButton = (Button) this.findViewById(R.id.button1);
 		photoButton.setOnClickListener(new View.OnClickListener() {
@@ -53,6 +53,8 @@ public class TakePhotoActivity extends Activity {
 				startActivityForResult(cameraIntent, CAMERA_REQUEST);				
 			}
 		});
+		makeMosaicButton = (Button) this.findViewById(R.id.makeMosaic);
+		makeMosaicButton.setEnabled(false);
 		
 	}
 	
@@ -64,17 +66,14 @@ public class TakePhotoActivity extends Activity {
 			image = photo;
 		}
 		
-		Button button = new Button(this);
-		button.setText("Use this picture");
-		button.setId(1);
-		button.setOnClickListener(new OnClickListener() {
+		makeMosaicButton.setEnabled(true);
+		makeMosaicButton.setOnClickListener(new OnClickListener() {
 			
 			public void onClick(View v) {
 				Log.i(MosaicGeneratorTag, "Now creating mosaic");
 				createPhotoMosaic(image);
 			}
 		});
-		ll.addView(button);
 	}
 	
 	private  void createPhotoMosaic(Bitmap image) {
@@ -84,6 +83,7 @@ public class TakePhotoActivity extends Activity {
 		NewStateListener generatorStateListener = new NewStateListener() {
 			
 			public void handle(List<AnalyzedImage> state, float currentFitness) {
+				Log.d(MosaicGeneratorTag, "Received state back");
 				if(count >= 500) {
 					generator.pause();
 					solution = generator.getSolutionTiles();

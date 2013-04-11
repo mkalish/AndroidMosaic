@@ -35,7 +35,7 @@ public class MosaicUtil {
 	 */
 	public static  LABValue[][] gatherLabValues(Bitmap bitmap, int divisions) {
 		int[] pixels = new int[divisions*divisions];
-		LABValue[][] labValues = new LABValue[divisions][];		
+		LABValue[][] labValues = new LABValue[divisions][divisions];		
 		for(int i = 0;i<divisions;i++){
 			for(int j = 0;j<divisions;j++){
 				int pixel = pixels[i*divisions+j];

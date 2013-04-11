@@ -147,7 +147,7 @@ public class GeneratorSimpleImpl implements Generator {
 						for (AnalyzedImage ai : solutionImageTiles){
 							copiedList.add(ai); //todo copy this more efficiently
 						}
-						listener.handle(copiedList, cumulativeFitness);//TODO change to something intelligent
+						listener.handle(copiedList, cumulativeFitness);
 					}
 				madeChangeThisiteration = false;
 				}
