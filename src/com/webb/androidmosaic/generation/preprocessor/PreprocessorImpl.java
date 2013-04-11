@@ -6,9 +6,8 @@ import java.util.List;
 import android.graphics.Bitmap;
 
 import com.webb.androidmosaic.generation.AnalyzedImage;
-import com.webb.androidmosaic.generation.ColorSpaceUtils;
 import com.webb.androidmosaic.generation.Configuration;
-import com.webb.androidmosaic.generation.LABValue;
+import com.webb.androidmosaic.util.MosaicUtil;
 
 public class PreprocessorImpl implements Preprocessor {
 	Configuration gc;
@@ -28,36 +27,12 @@ public class PreprocessorImpl implements Preprocessor {
 	
 	private AnalyzedImage analyze (Bitmap bitmap){
 		int divisions = gc.getTileDivisions();
-		//crop to square, TODO: should probably crop from center
-		int shortSideLen = Math.min(bitmap.getHeight(),bitmap.getWidth());
-		bitmap = cropToSquare(bitmap, shortSideLen);
 		
-		//There might be a better way to resize
-		bitmap = Bitmap.createScaledBitmap(bitmap, divisions, divisions, false);
+		Bitmap croppedBitmap = MosaicUtil.cropBitMapToSquare(bitmap);
 		
-		//Retrieve data from formatted bitmap
-		int[] pixels = new int[divisions*divisions];
-		bitmap.getPixels(pixels, 0, divisions, 0, 0, divisions, divisions);
+		Bitmap scaledBitmap = MosaicUtil.scaleBitmap(croppedBitmap, divisions);
 		
-		//Initialize labValues "array"
-		LABValue[][] labValues = new LABValue[divisions][];
-		
-		for (int i = 0; i <divisions;i++){
-			labValues[i] = new LABValue[divisions];
-		}
-		
-		//(row,column)
-		for(int i = 0;i<divisions;i++){
-			for(int j = 0;j<divisions;j++){
-				int pixel = pixels[i*divisions+j];
-				int r = (pixel >> 16) & 0xff;     //bitwise shifting
-				int g = (pixel >> 8) & 0xff;
-				int b = pixel & 0xff;
-				LABValue labValue = ColorSpaceUtils.RGBToLAB(r, g, b);
-				labValues[i][j]=labValue;
-			}
-		}
-		AnalyzedImage ai = new AnalyzedImage(labValues);
+		AnalyzedImage ai = new AnalyzedImage(MosaicUtil.gatherLabValues(scaledBitmap, divisions));
 		return ai;
 	}
 	
