@@ -17,40 +17,20 @@
         android:theme="@style/AppTheme" 
         android:name="com.webb.androidmosaic.AndroidMosaicApp" android:restoreNeedsApplication="true">
         <activity
-            android:name=".WelcomeActivity"
-            android:label="@string/title_activity_welcome" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity
             android:name=".MainMenuActivity"
             android:label="@string/title_activity_main_menu" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity 
             android:name=".TakePhotoActivity"
-            android:label="@string/makeAMosaic">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
-            
+            android:label="@string/makeAMosaic">            
         </activity>
         <activity
             android:name=".CameraPreviewActivity"
             android:label="@string/title_activity_camera_preview" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
     </application>
 </manifest>

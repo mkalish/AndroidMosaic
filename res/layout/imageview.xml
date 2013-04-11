@@ -1,11 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:id="@+id/linearlayout1"
     >
-    <Button android:id="@+id/button1" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/hello_world"></Button>
-    <ImageView android:id="@+id/imageView1" android:layout_height="wrap_content" android:src="@drawable/ic_launcher" android:layout_width="wrap_content"></ImageView>
+    <ImageView
+        android:id="@+id/imageView1"
+        android:layout_width="fill_parent"
+        android:layout_height="410dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true" />
 
-</LinearLayout>
+    <Button
+        android:id="@+id/button1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginRight="25dp"
+        android:text="@string/takephoto" />
+
+    <Button
+        android:id="@+id/makeMosaic"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_toLeftOf="@+id/button1"
+        android:text="@string/makeAMosaic" />
+
+</RelativeLayout>
