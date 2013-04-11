@@ -1,9 +1,9 @@
 package com.webb.androidmosaic;
 
-import java.io.File;
-import java.io.FileInputStream;
+
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 import android.app.Activity;
@@ -33,8 +33,8 @@ public class TakePhotoActivity extends Activity {
 	private LinearLayout ll;
 	private Bitmap image;
 	private Generator generator;
-	private Configuration cfg;
 	@SuppressWarnings("unused")
+	private Configuration cfg;
 	private List<AnalyzedImage> solution; 
 	private String MosaicGeneratorTag = "Mosaic Generation";
 	private int count = 0;
@@ -112,12 +112,12 @@ public class TakePhotoActivity extends Activity {
 		Bitmap mosaicBitmap = Bitmap.createBitmap(500, 500, Bitmap.Config.ARGB_8888);
 		Canvas mosaic = new Canvas(mosaicBitmap);
 		
-		FileInputStream file = null;
+		InputStream file = null;
 		int x = 0;
 		int y = 0;
 		for(AnalyzedImage analyzedImage: solution) {
 			try {
-				file = new FileInputStream(new File(analyzedImage.getFile()));
+				file = getApplicationContext().getAssets().open(((AndroidMosaicApp) getApplicationContext()).getImageDirectory() + "/" + analyzedImage.getFile());
 			} catch(IOException e) {
 				Log.e(MosaicGeneratorTag, "Unable to open corresponding bitmap");
 				e.printStackTrace();

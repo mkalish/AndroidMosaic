@@ -110,10 +110,9 @@ public class AndroidMosaicApp extends Application {
 		FileOutputStream fos = null;
 		ObjectOutputStream oos = null;
 		File fileToSave = null;
-		String filePath = directory+"/"+id;
-		analyzedImage.setFile(filePath);
+		analyzedImage.setFile(String.valueOf(id));
 		try {
-			fileToSave = new File(filePath);
+			fileToSave = new File(directory+"/"+id);
 			fos = new FileOutputStream(fileToSave);
 			oos = new ObjectOutputStream(fos);
 			oos.writeObject(analyzedImage);
@@ -180,5 +179,9 @@ public class AndroidMosaicApp extends Application {
 	
 	public Configuration getCfg() {
 		return cfg;
+	}
+	
+	public String getImageDirectory() {
+		return imageDirectory;
 	}
 }
