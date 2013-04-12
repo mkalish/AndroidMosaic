@@ -48,7 +48,7 @@ public class AndroidMosaicApp extends Application {
 			Log.e(APP_START, "Did not get images");
 		}
 		
-		File directoryBitMaps = getApplicationContext().getDir(bitmapDirectory, MODE_PRIVATE);
+		File directoryBitMaps = getDir(bitmapDirectory, MODE_WORLD_READABLE);
 		if(directoryBitMaps == null) {
 			Log.e(APP_START, "Unable to get or create bitmap directory");
 		}
@@ -183,5 +183,9 @@ public class AndroidMosaicApp extends Application {
 	
 	public String getImageDirectory() {
 		return imageDirectory;
+	}
+	
+	public String getBitmapDirectory() {
+		return bitmapDirectory;
 	}
 }
