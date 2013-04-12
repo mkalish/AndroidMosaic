@@ -136,10 +136,11 @@ public class TakePhotoActivity extends Activity {
 				Bitmap croppedImage = MosaicUtil.cropBitMapToSquare(image);
 				image = Bitmap.createScaledBitmap(croppedImage, widthOfTile, widthOfTile, false);
 				if(columnsCurrentlyWritten == numOfColums) {
-					y += 15;
+					y = y+15;
 					x = 0;
 				} else {
 					mosaic.drawBitmap(image, x, y, null);
+					x = x+15;
 				}
 			}
 		}
