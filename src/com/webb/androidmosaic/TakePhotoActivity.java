@@ -112,8 +112,10 @@ public class TakePhotoActivity extends Activity {
 		
 	}
 	
-	private boolean saveMosaic(int numOfRows, int numOfColums, int widthOfTile) {
-		Bitmap mosaicBitmap = Bitmap.createBitmap(numOfRows*widthOfTile, numOfColums*widthOfTile, Bitmap.Config.ARGB_8888);
+	private boolean saveMosaic(int numOfRows, int numOfColumns, int widthOfTile) {
+		int width = numOfColumns*widthOfTile;
+		int height = numOfRows*widthOfTile;
+		Bitmap mosaicBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
 		Canvas mosaic = new Canvas(mosaicBitmap);
 		
 		boolean success = false;
@@ -135,12 +137,15 @@ public class TakePhotoActivity extends Activity {
 			if(image != null) {
 				Bitmap croppedImage = MosaicUtil.cropBitMapToSquare(image);
 				image = Bitmap.createScaledBitmap(croppedImage, widthOfTile, widthOfTile, false);
-				if(columnsCurrentlyWritten == numOfColums) {
-					y = y+15;
+				if(columnsCurrentlyWritten == numOfColumns-1) {
+					mosaic.drawBitmap(image, x, y, null);
+					y = y+widthOfTile;
 					x = 0;
+					columnsCurrentlyWritten = 0;
 				} else {
 					mosaic.drawBitmap(image, x, y, null);
-					x = x+15;
+					x = x+widthOfTile;
+					columnsCurrentlyWritten++;
 				}
 			}
 		}
