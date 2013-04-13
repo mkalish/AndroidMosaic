@@ -26,8 +26,8 @@ import com.webb.androidmosaic.generation.preprocessor.PreprocessorFactory;
 public class AndroidMosaicApp extends Application {
 	
 	private static final int MAX_DUPLICATES = 2000;
-	private static final int NUMBER_OF_WIDTH_DIVISIONS = 9;
-	private static final int NUMBER_OF_DIVISIONS = 9;
+	private static final int NUMBER_OF_WIDTH_DIVISIONS = 20;
+	private static final int NUMBER_OF_DIVISIONS = 20;
 	private List<Bitmap> bitmaps;
 	private AssetManager mngr;
 	private String imageDirectory ="images";
