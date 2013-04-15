@@ -6,12 +6,10 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.List;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -23,7 +21,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.webb.androidmosaic.generation.AnalyzedImage;
 import com.webb.androidmosaic.generation.Configuration;
@@ -89,7 +86,7 @@ public class TakePhotoActivity extends Activity {
 			
 			public void handle(List<AnalyzedImage> state, float currentFitness) {
 				Log.d(MosaicGeneratorTag, "got state");
-				if(count >= 100) {
+				if(count >= 500) {
 					generator.pause();
 					solution = generator.getSolutionTiles();
 					if(saveMosaic(generator.getNumTilesPerRowInSolution(), generator.getNumTilesPerColumnInSolution(), generator.getWidthOfTileInPixels())) {
@@ -125,7 +122,6 @@ public class TakePhotoActivity extends Activity {
 		int y = 0;
 		int columnsCurrentlyWritten = 0;
 		for(AnalyzedImage analyzedImage: solution) {
-			String fileName = ((AndroidMosaicApp) getApplicationContext()).getBitmapDirectory() + "/" + analyzedImage.getFile();
 			File directory = getDir(((AndroidMosaicApp) getApplicationContext()).getBitmapDirectory(), MODE_WORLD_READABLE);
 			try {
 				file = new FileInputStream(directory+ "/" + analyzedImage.getFile());
