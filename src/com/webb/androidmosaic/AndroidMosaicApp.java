@@ -25,9 +25,9 @@ import com.webb.androidmosaic.generation.preprocessor.PreprocessorFactory;
 
 public class AndroidMosaicApp extends Application {
 	
-	private static final int MAX_DUPLICATES = 2;
-	private static final int NUMBER_OF_WIDTH_DIVISIONS = 9;
-	private static final int NUMBER_OF_DIVISIONS = 9;
+	private static final int MAX_DUPLICATES = 2000;
+	private static final int NUMBER_OF_WIDTH_DIVISIONS = 20;
+	private static final int NUMBER_OF_DIVISIONS = 20;
 	private List<Bitmap> bitmaps;
 	private AssetManager mngr;
 	private String imageDirectory ="images";
@@ -48,7 +48,7 @@ public class AndroidMosaicApp extends Application {
 			Log.e(APP_START, "Did not get images");
 		}
 		
-		File directoryBitMaps = getApplicationContext().getDir(bitmapDirectory, MODE_PRIVATE);
+		File directoryBitMaps = getDir(bitmapDirectory, MODE_WORLD_READABLE);
 		if(directoryBitMaps == null) {
 			Log.e(APP_START, "Unable to get or create bitmap directory");
 		}
@@ -183,5 +183,9 @@ public class AndroidMosaicApp extends Application {
 	
 	public String getImageDirectory() {
 		return imageDirectory;
+	}
+	
+	public String getBitmapDirectory() {
+		return bitmapDirectory;
 	}
 }

@@ -1,6 +1,9 @@
 package com.webb.androidmosaic;
 
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -9,16 +12,18 @@ import java.util.List;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.webb.androidmosaic.generation.AnalyzedImage;
@@ -26,6 +31,7 @@ import com.webb.androidmosaic.generation.Configuration;
 import com.webb.androidmosaic.generation.NewStateListener;
 import com.webb.androidmosaic.generation.generator.Generator;
 import com.webb.androidmosaic.generation.generator.GeneratorFactory;
+import com.webb.androidmosaic.util.MosaicUtil;
 
 public class TakePhotoActivity extends Activity {
 	
@@ -83,12 +89,11 @@ public class TakePhotoActivity extends Activity {
 		NewStateListener generatorStateListener = new NewStateListener() {
 			
 			public void handle(List<AnalyzedImage> state, float currentFitness) {
-				Log.d(MosaicGeneratorTag, "Received state back");
-				if(count >= 500) {
+				Log.d(MosaicGeneratorTag, "got state");
+				if(count >= 100) {
 					generator.pause();
 					solution = generator.getSolutionTiles();
-					if(saveMosaic()) {
-						Toast.makeText(getApplicationContext(), "Your mosaic has been saved", Toast.LENGTH_LONG).show();
+					if(saveMosaic(generator.getNumTilesPerRowInSolution(), generator.getNumTilesPerColumnInSolution(), generator.getWidthOfTileInPixels())) {
 						Log.d(MosaicGeneratorTag, "Image saved");
 					}
 				} else {
@@ -108,33 +113,54 @@ public class TakePhotoActivity extends Activity {
 		
 	}
 	
-	private boolean saveMosaic() {
-		Bitmap mosaicBitmap = Bitmap.createBitmap(500, 500, Bitmap.Config.ARGB_8888);
+	private boolean saveMosaic(int numOfRows, int numOfColumns, int widthOfTile) {
+		int width = numOfColumns*widthOfTile;
+		int height = numOfRows*widthOfTile;
+		Bitmap mosaicBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
 		Canvas mosaic = new Canvas(mosaicBitmap);
 		
-		InputStream file = null;
+		boolean success = false;
+		
+		FileInputStream file = null;
 		int x = 0;
 		int y = 0;
+		int columnsCurrentlyWritten = 0;
 		for(AnalyzedImage analyzedImage: solution) {
+			String fileName = ((AndroidMosaicApp) getApplicationContext()).getBitmapDirectory() + "/" + analyzedImage.getFile();
+			File directory = getDir(((AndroidMosaicApp) getApplicationContext()).getBitmapDirectory(), MODE_WORLD_READABLE);
 			try {
-				file = getApplicationContext().getAssets().open(((AndroidMosaicApp) getApplicationContext()).getImageDirectory() + "/" + analyzedImage.getFile());
-			} catch(IOException e) {
-				Log.e(MosaicGeneratorTag, "Unable to open corresponding bitmap");
+				file = new FileInputStream(directory+ "/" + analyzedImage.getFile());
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			Bitmap image = BitmapFactory.decodeStream(file);
 			if(image != null) {
-				mosaic.drawBitmap(mosaicBitmap, x, y, null);
+				Bitmap croppedImage = MosaicUtil.cropBitMapToSquare(image);
+				image = Bitmap.createScaledBitmap(croppedImage, widthOfTile, widthOfTile, false);
+				if(columnsCurrentlyWritten == numOfColumns-1) {
+					mosaic.drawBitmap(image, x, y, null);
+					y = y+widthOfTile;
+					x = 0;
+					columnsCurrentlyWritten = 0;
+				} else {
+					mosaic.drawBitmap(image, x, y, null);
+					x = x+widthOfTile;
+					columnsCurrentlyWritten++;
+				}
 			}
 		}
 		
 		try {
-			mosaicBitmap.compress(Bitmap.CompressFormat.JPEG, 100, new FileOutputStream("/mnt/sdcard/image.jpg"));
-			return true;
+			File sdDir = Environment.getExternalStorageDirectory();
+			mosaicBitmap.compress(Bitmap.CompressFormat.JPEG, 100, new FileOutputStream(sdDir+"/image.jpg"));
+			sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED, Uri.parse("file://"+ Environment.getExternalStorageDirectory())));
+			success = true;
 		} catch(IOException e) {
 			Log.e(MosaicGeneratorTag, "Unable to save the mosaic");
+			e.printStackTrace();
 		}
-		return false;
+		return success;
 	}
 
 }
